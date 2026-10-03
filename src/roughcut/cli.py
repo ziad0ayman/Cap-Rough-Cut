@@ -41,7 +41,7 @@ def main():
     parser.add_argument("--whisper-model", default="large-v2",
         help="Whisper model (tiny/base/small/medium/large-v2/large-v3). Default is large-v2 for optimal Arabic dialect support.")
     parser.add_argument("--no-fillers", action="store_true",
-        help="Don't remove filler words (um, uh, يعني, etc.)")
+        help="Don't remove filler words (um, uh, ya3ni, etc.)")
     
     # Editing config
     parser.add_argument("--padding", type=float, default=0.15,
