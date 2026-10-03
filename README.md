@@ -38,7 +38,7 @@ GEMINI_API_KEY=your_gemini_api_key
 Run the CLI tool against any raw video file:
 
 ```bash
-python -m caproughcut path/to/video.mp4 --mode studio
+caproughcut path/to/video.mp4 --mode studio
 ```
 
 ### Modes
