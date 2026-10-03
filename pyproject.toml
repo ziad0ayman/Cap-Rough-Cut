@@ -3,13 +3,14 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "roughcut"
+name = "caproughcut"
 version = "0.1.0"
-description = "Automatic rough cut generator for CapCut Desktop"
+description = "CapRoughCut: Automatic rough cut generator for CapCut Desktop"
 requires-python = ">=3.10"
 dependencies = [
     "faster-whisper>=1.0.0",
+    "python-dotenv>=1.0.0"
 ]
 
 [project.scripts]
-roughcut = "roughcut.cli:main"
+caproughcut = "roughcut.cli:main"

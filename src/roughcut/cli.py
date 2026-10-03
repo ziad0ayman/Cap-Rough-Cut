@@ -1,13 +1,17 @@
 import argparse
 import os
 import sys
+from dotenv import load_dotenv
 
 from roughcut.pipeline import process_video, process_studio_video
 
 def main():
+    # Load environment variables from .env file
+    load_dotenv()
+    
     parser = argparse.ArgumentParser(
-        prog="roughcut",
-        description="Automatic rough cut generator for CapCut Desktop (Silence & Transcript-based)"
+        prog="caproughcut",
+        description="CapRoughCut: Automatic AI rough cut generator for CapCut Desktop"
     )
     parser.add_argument("input", help="Video file or directory of videos")
     parser.add_argument("-n", "--name", help="Project name (default: auto-generated based on filename)")

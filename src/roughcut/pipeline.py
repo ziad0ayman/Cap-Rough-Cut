@@ -25,7 +25,7 @@ def process_video(
         
     if not project_name:
         base_name = os.path.splitext(os.path.basename(video_path))[0]
-        project_name = f"{base_name}_RoughCut"
+        project_name = f"{base_name}_CapRoughCut"
 
     print(f"[{project_name}] Extracting media info...")
     media_info = get_media_info(video_path)
@@ -79,7 +79,7 @@ def process_studio_video(
         
     if not project_name:
         base_name = os.path.splitext(os.path.basename(video_path))[0]
-        project_name = f"{base_name}_StudioCut"
+        project_name = f"{base_name}_CapStudioCut"
 
     print(f"[{project_name}] Extracting media info...")
     media_info = get_media_info(video_path)

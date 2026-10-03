@@ -27,3 +27,7 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .DS_Store
+
+# Environment Variables
+.env
+.env.local
