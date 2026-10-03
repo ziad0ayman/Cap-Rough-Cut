@@ -1,0 +1,6 @@
+Metadata-Version: 2.4
+Name: roughcut
+Version: 0.1.0
+Summary: Automatic rough cut generator for CapCut Desktop
+Requires-Python: >=3.10
+Requires-Dist: faster-whisper>=1.0.0

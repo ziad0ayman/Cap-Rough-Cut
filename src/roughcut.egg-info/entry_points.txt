@@ -1,0 +1,2 @@
+[console_scripts]
+roughcut = roughcut.cli:main

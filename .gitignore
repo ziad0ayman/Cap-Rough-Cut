@@ -1,0 +1,29 @@
+# Virtual Environment
+.venv*
+venv/
+env/
+
+# Media files
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.wav
+*.mp3
+
+# Large binary files
+*.whl
+*.bin
+*.pt
+
+# Debug logs
+*.log
+ai_transcript_debug.txt
+ai_response_debug.json
+transcript_*.txt
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
