@@ -1,4 +1,4 @@
-# Rough Cut AI (CapCut Plugin)
+# CapRoughCut (CapCut Plugin)
 
 An automated, AI-powered rough cut generator designed specifically for CapCut Desktop. It analyzes raw studio footage, removes bad takes, cuts out crew chatter, trims silences, and generates a native CapCut Draft project automatically.
 
@@ -12,8 +12,8 @@ An automated, AI-powered rough cut generator designed specifically for CapCut De
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/roughcut-ai.git
-   cd roughcut-ai
+   git clone https://github.com/ziad0ayman/Cap-Rough-Cut.git
+   cd Cap-Rough-Cut
    ```
 2. Create a Python 3.12 virtual environment:
    ```bash
@@ -26,12 +26,19 @@ An automated, AI-powered rough cut generator designed specifically for CapCut De
    ```
 4. Install PyTorch with CUDA support (for faster transcription).
 
+## Configuration
+Create a `.env` file in the root of the project (you can copy `.env.example`) and add your API keys:
+```env
+HF_TOKEN=your_huggingface_token
+GEMINI_API_KEY=your_gemini_api_key
+```
+
 ## Usage
 
 Run the CLI tool against any raw video file:
 
 ```bash
-python -m roughcut path/to/video.mp4 --mode studio --hf-token "YOUR_HUGGINGFACE_TOKEN" --gemini-key "YOUR_GEMINI_API_KEY"
+python -m caproughcut path/to/video.mp4 --mode studio
 ```
 
 ### Modes
