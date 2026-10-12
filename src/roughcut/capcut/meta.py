@@ -3,6 +3,8 @@ import time
 from pathlib import Path
 from typing import Dict, Any
 
+import sys
+
 def update_root_meta_info(root_meta_path: Path, draft_id: str, project_name: str, 
                           draft_fold_path: str, cover_path: str, root_path: str, 
                           creation_time: int, modify_time: int, duration_us: int):
@@ -15,6 +17,18 @@ def update_root_meta_info(root_meta_path: Path, draft_id: str, project_name: str
             
     # Check if project already exists
     existing = next((p for p in data.get("all_draft_store", []) if p.get("draft_id") == draft_id), None)
+
+    draft_json = str(Path(draft_fold_path) / "draft_content.json")
+    if sys.platform == "win32":
+        draft_json = draft_json.replace("/", "\\")
+        cover_path = cover_path.replace("/", "\\")
+        draft_fold_path = draft_fold_path.replace("/", "\\")
+        root_path = root_path.replace("/", "\\")
+    else:
+        draft_json = draft_json.replace("\\", "/")
+        cover_path = cover_path.replace("\\", "/")
+        draft_fold_path = draft_fold_path.replace("\\", "/")
+        root_path = root_path.replace("\\", "/")
     
     entry = {
         "cloud_draft_cover": False,
@@ -33,7 +47,7 @@ def update_root_meta_info(root_meta_path: Path, draft_id: str, project_name: str
         "draft_is_invisible": False,
         "draft_is_pippit_draft": False,
         "draft_is_web_article_video": False,
-        "draft_json_file": f"{draft_fold_path}\\draft_content.json".replace("/", "\\"),
+        "draft_json_file": draft_json,
         "draft_name": project_name,
         "draft_new_version": "",
         "draft_root_path": root_path,
@@ -136,11 +150,13 @@ def generate_draft_meta_info(draft_id: str, project_name: str, draft_fold_path: 
     }
 
 def generate_draft_settings(creation_time: int, duration_us: int) -> str:
+    import sys
     modify_time = int(time.time())
+    platform_name = "mac" if sys.platform == "darwin" else "windows"
     return f"""[General]
 draft_create_time={creation_time}
 draft_last_edit_time={modify_time}
 real_edit_seconds=0
 real_edit_keys=0
-cloud_last_modify_platform=windows
+cloud_last_modify_platform={platform_name}
 """

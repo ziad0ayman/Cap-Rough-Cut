@@ -60,7 +60,7 @@ def process_video(
 def process_studio_video(
     video_path: str,
     output_dir: str,
-    hf_token: str,
+    hf_token: str = None,
     project_name: str = None,
     whisper_model: str = "large-v2",
     similarity_threshold: float = 0.65,
@@ -71,8 +71,8 @@ def process_studio_video(
     gemini_key: str = None,
 ):
     """Studio processing pipeline (diarization + smart take detection)."""
-    if not hf_token:
-        raise ValueError("Hugging Face token (--hf-token) is required for studio mode.")
+    if not hf_token and not gemini_key:
+        raise ValueError("Either Hugging Face token (--hf-token) or Gemini API key (--gemini-key) is required for studio mode.")
         
     if not os.path.exists(video_path):
         raise FileNotFoundError(f"Video file not found: {video_path}")

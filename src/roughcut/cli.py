@@ -5,7 +5,25 @@ from dotenv import load_dotenv
 
 from roughcut.pipeline import process_video, process_studio_video
 
+def get_default_drafts_dir() -> str:
+    if sys.platform == "win32":
+        return os.path.expandvars(r"%LOCALAPPDATA%\CapCut\User Data\Projects\com.lveditor.draft")
+    elif sys.platform == "darwin":
+        app_store = os.path.expanduser("~/Library/Containers/com.lemon.lvoverseas/Data/Movies/CapCut/User Data/Projects/com.lveditor.draft")
+        standard = os.path.expanduser("~/Movies/CapCut/User Data/Projects/com.lveditor.draft")
+        if os.path.exists(app_store):
+            return app_store
+        return standard
+    else:
+        return os.path.expanduser("~/Movies/CapCut/User Data/Projects/com.lveditor.draft")
+
 def main():
+    try:
+        import certifi
+        os.environ.setdefault("SSL_CERT_FILE", certifi.where())
+    except ImportError:
+        pass
+
     # Load environment variables from .env file
     load_dotenv()
     
@@ -16,7 +34,7 @@ def main():
     parser.add_argument("input", help="Video file or directory of videos")
     parser.add_argument("-n", "--name", help="Project name (default: auto-generated based on filename)")
     parser.add_argument("-o", "--output",
-        default=os.path.expandvars(r"%LOCALAPPDATA%\CapCut\User Data\Projects\com.lveditor.draft"),
+        default=get_default_drafts_dir(),
         help="CapCut drafts directory")
     
     # Modes
@@ -25,7 +43,7 @@ def main():
     
     # Studio mode config
     parser.add_argument("--hf-token", default=os.environ.get("HF_TOKEN"),
-        help="Hugging Face token for speaker diarization (required for --mode studio)")
+        help="Hugging Face token for speaker diarization (required for --mode studio if Gemini key is not set)")
     parser.add_argument("--gemini-key", default=os.environ.get("GEMINI_API_KEY"),
         help="Gemini API Key for AI Director mode (optional)")
     parser.add_argument("--similarity", type=float, default=0.65,
@@ -57,8 +75,8 @@ def main():
         if "--padding" not in sys.argv:
             args.padding = 0.30      # More breathing room around cuts
     
-    if args.mode == "studio" and not args.hf_token:
-        print("Error: --hf-token is required for 'studio' mode. Set the HF_TOKEN environment variable or pass it directly.")
+    if args.mode == "studio" and not args.hf_token and not args.gemini_key:
+        print("Error: Either --gemini-key (or GEMINI_API_KEY env) or --hf-token (or HF_TOKEN env) is required for 'studio' mode.")
         sys.exit(1)
     
     # Validate output dir

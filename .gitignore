@@ -25,6 +25,7 @@ transcript_*.txt
 # Python
 __pycache__/
 *.pyc
+*.egg-info/
 .pytest_cache/
 .DS_Store
 

@@ -102,8 +102,8 @@ def diarize_transcript(
 def transcribe_for_ai(
     video_path: str,
     model_size: str = "large-v2",
-    device: str = "cuda",
-    compute_type: str = "int8",
+    device: str = "auto",
+    compute_type: str = "default",
 ) -> List[Tuple[float, float, str]]:
     """
     Transcribes audio using faster-whisper (word_timestamps=True) and returns
@@ -112,16 +112,12 @@ def transcribe_for_ai(
     """
     from faster_whisper import WhisperModel
     import gc
-    import torch
 
     print(f"Loading faster-whisper '{model_size}' on {device} ({compute_type})...")
     model = WhisperModel(model_size, device=device, compute_type=compute_type)
     
-    import whisperx
-    audio = whisperx.load_audio(video_path)
-    
     print("Transcribing with word-level timestamps...")
-    segments, info = model.transcribe(audio, word_timestamps=True, vad_filter=True)
+    segments, info = model.transcribe(video_path, word_timestamps=True, vad_filter=True)
     
     fine_segments = []
     for seg in segments:
@@ -140,7 +136,11 @@ def transcribe_for_ai(
                     
     del model
     gc.collect()
-    if device == "cuda":
-        torch.cuda.empty_cache()
+    try:
+        import torch
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+    except Exception:
+        pass
         
     return fine_segments

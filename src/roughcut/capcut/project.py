@@ -12,10 +12,13 @@ from .schema import (
 )
 from .meta import update_root_meta_info, generate_draft_meta_info, generate_draft_settings
 
-# Hardcode the platform block from the user's project
+import sys
+import platform
+
+# Platform block matching host system
 PLATFORM_DATA = {
-    "os": "windows",
-    "os_version": "10.0.26200",
+    "os": "mac" if sys.platform == "darwin" else "windows",
+    "os_version": platform.mac_ver()[0] if sys.platform == "darwin" else "10.0.26200",
     "app_id": 359289,
     "app_version": "9.3.0",
     "app_source": "cc",

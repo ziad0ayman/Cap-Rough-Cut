@@ -49,7 +49,8 @@ def get_ai_director_decisions(
         "Output the list of KEEP regions to form the final, duplicate-free video."
     )
 
-    print("Asking AI Director (Gemini 3.8 Flash) for edit decisions...")
+    model_name = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+    print(f"Asking AI Director ({model_name}) for edit decisions...")
     
     from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
     from google.genai.errors import APIError
@@ -61,16 +62,31 @@ def get_ai_director_decisions(
         before_sleep=lambda retry_state: print(f"API Error (High Demand). Retrying in {retry_state.next_action.sleep}s...")
     )
     def call_gemini():
-        return client.models.generate_content(
-            model='gemini-3.8-flash',
-            contents=transcript_text,
-            config=types.GenerateContentConfig(
-                system_instruction=system_instruction,
-                response_mime_type="application/json",
-                response_schema=EditDecisionList,
-                temperature=0.1,
-            ),
-        )
+        # Try preferred model first, then fallback to other standard flash models if not found
+        candidate_models = [model_name]
+        for fallback in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]:
+            if fallback not in candidate_models:
+                candidate_models.append(fallback)
+
+        last_err = None
+        for m in candidate_models:
+            try:
+                return client.models.generate_content(
+                    model=m,
+                    contents=transcript_text,
+                    config=types.GenerateContentConfig(
+                        system_instruction=system_instruction,
+                        response_mime_type="application/json",
+                        response_schema=EditDecisionList,
+                        temperature=0.1,
+                    ),
+                )
+            except Exception as e:
+                last_err = e
+                if "404" in str(e) or "not found" in str(e).lower():
+                    continue
+                raise
+        raise last_err
 
     response = call_gemini()
     
